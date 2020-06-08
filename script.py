@@ -20,7 +20,7 @@ youtube = build('youtube' , 'v3' ,credentials = credentials ,developerKey = api_
 
 #this function return the views count 
 def views_count():
-    request = youtube.videos().list(id='h9N29ZLDGY0',part="statistics")
+    request = youtube.videos().list(id='Youtube video id',part="statistics")
     pop = dict(request.execute())
     views = pop['items'][0]["statistics"]['viewCount']
     return views

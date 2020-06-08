@@ -1,17 +1,12 @@
-#you need to install this two libraries
-
 from google_auth_oauthlib.flow import InstalledAppFlow
 
 from googleapiclient.discovery import build
 
 import time
 
-#pafy required youtube_dl library , so make sure you install youtube_dl library too
-#i used pafy so that i could lower the number of queries
-import pafy
-
 stts = [0]
 
+api_key = "Your youtube data api token key"
 flow = InstalledAppFlow.from_client_secrets_file(
     #name of your oauth credential files ,please make that this file is in same directory
     'client_secret.json',
@@ -21,16 +16,17 @@ flow = InstalledAppFlow.from_client_secrets_file(
 
 credentials = flow.run_console()
 
-youtube = build('youtube' , 'v3' ,credentials = credentials)
+youtube = build('youtube' , 'v3' ,credentials = credentials ,developerKey = api_key)
 
 #this function return the views count 
 def views_count():
-    vid = pafy.new("https://youtu.be/h9N29ZLDGY0")
-    views = vid.viewcount
-    return views 
+    request = youtube.videos().list(id='h9N29ZLDGY0',part="statistics")
+    pop = dict(request.execute())
+    views = pop['items'][0]["statistics"]['viewCount']
+    return views
 
 def changing_title():
-    new_title = views_count()
+    new_title = int(views_count())
     if new_title[0] > stts[0]:
         change = youtube.videos().update(part="snippet",body={
             #id of your youtube video of which title will change 
@@ -48,7 +44,8 @@ def changing_title():
         print("No changed exists")
 #use while true for running it continuously
 for t in range(10):
-    time.sleep(300)
     changing_title()
     print(stts[0])
+    time.sleep(900)
+    
 

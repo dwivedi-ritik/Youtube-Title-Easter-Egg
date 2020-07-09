@@ -47,7 +47,7 @@ try:
     changing_title()
     time.sleep(900)
 except Exception as e:
-    time.sleep()
+    runtime = False
 
     
 
